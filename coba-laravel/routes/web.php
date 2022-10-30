@@ -6,6 +6,8 @@ use App\Models\Post;
 
 use App\Models\Category;
 use App\Models\User;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,10 +20,11 @@ use App\Models\User;
 */
 
 Route::get('/', function () {
-     return view('home', [
+    return view('home', [
         "title" => "Home"
     ]);
 });
+
 Route::get('/about', function () {
     return view('about', [
         "title" => "About",
@@ -30,6 +33,7 @@ Route::get('/about', function () {
         "image" => "yogi.jpeg"
     ]);
 });
+
 Route::get('/blog', [PostController::class, 'index']);
 Route::get('posts/{post:slug}', [PostController::class, 'show']);
 
@@ -42,11 +46,10 @@ Route::get('/categories', function () {
 
 Route::get('/categories/{category:slug}', function (Category $category) {
     return view(
-        'category',
+        'posts',
         [
-            'title' => $category->name,
-            'posts' => $category->posts,
-            'category' => $category->name
+            'title' => "Post By Category : $category->name",
+            'posts' => $category->posts->load('category', 'author'),
         ]
     );
 });
@@ -55,8 +58,8 @@ Route::get('/authors/{author:username}', function (User $author) {
     return view(
         'posts',
         [
-            'title' => 'User Posts',
-            'posts' => $author->posts,
+            'title' => "Post by Author : $author->name",
+            'posts' => $author->posts->load('category', 'author'),
         ]
     );
 });
