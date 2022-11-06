@@ -13,7 +13,7 @@ class post extends Model
     protected $guarded = ['id'];
     protected $with = ['category', 'author'];
 
-     public function scopeFilter($query, array $filters)
+    public function scopeFilter($query, array $filters)
     {
         $query->when($filters['search'] ?? false, function ($query, $search) {
             return $query->where(function ($query) use ($search) {
@@ -38,7 +38,6 @@ class post extends Model
             )
         );
     }
-    
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -47,5 +46,10 @@ class post extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }
